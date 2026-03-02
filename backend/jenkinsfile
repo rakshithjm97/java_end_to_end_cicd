@@ -1,0 +1,104 @@
+pipeline {
+  agent any
+
+  options {
+    timestamps()
+    ansiColor('xterm')
+    disableConcurrentBuilds()
+  }
+
+  environment {
+    APP_NAME = "my-app"
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Parallel Checks') {
+      parallel {
+        stage('Unit Tests') {
+          steps {
+            sh '''
+              set -e
+              echo "Running unit tests..."
+              npm ci
+              npm test
+            '''
+          }
+        }
+
+        stage('Lint') {
+          steps {
+            sh '''
+              set -e
+              echo "Running lint..."
+              npm ci
+              npm run lint
+            '''
+          }
+        }
+
+        stage('Security Scan') {
+          steps {
+            sh '''
+              set -e
+              echo "Running security scan..."
+              npm ci
+              npm audit --audit-level=high || true
+            '''
+          }
+        }
+      }
+    }
+
+    stage('Build') {
+      steps {
+        sh '''
+          set -e
+          echo "Building..."
+          npm ci
+          npm run build
+        '''
+      }
+    }
+
+    stage('Docker Build & Push') {
+      when { branch "main" }
+      steps {
+        sh '''
+          set -e
+          echo "Docker build & push..."
+          VERSION=$(node -p "require('./package.json').version")
+          docker build -t ${APP_NAME}:${VERSION} .
+          docker tag ${APP_NAME}:${VERSION} myrepo/${APP_NAME}:${VERSION}
+          docker push myrepo/${APP_NAME}:${VERSION}
+        '''
+      }
+    }
+
+    stage('Deploy') {
+      when { branch "main" }
+      steps {
+        sh '''
+          set -e
+          echo "Deploying..."
+          # Example: kubectl apply -f k8s/
+          # or helm upgrade --install ...
+        '''
+      }
+    }
+  }
+
+  post {
+    always {
+      echo "Pipeline finished (success/failure)."
+    }
+    failure {
+      echo "Pipeline failed. Check parallel stage logs to see which branch failed."
+    }
+  }
+}

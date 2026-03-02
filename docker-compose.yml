@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  mongodb:
+    container_name: mongo
+    image: mongo:21-alpine
+    volumes:
+      - ./backend/data:/data
+    ports:
+      -"27017:27017"
+
+  frontend:
+    build: ./build
+    conainter_name: frontend
+    envi_file:
+     - /frontend/.env.docker
+    ports:
+     - "8080:8080"
+    depoens_on:
+     - mongodb
+  
+  backend:
+    build: .build
+    container_name: backned
+    env_file:
+      - /backend/.enc.docker
+    ports:
+      -"573:5173"
+    depends_on:
+      - mongodb
+
+  redis:
+    container_name: redis
+    image: redis:7.0.5-alpine 
+    expose:
+      - 6379
+    depends_on:
+      - mongodb
+    restart: unless-stoped
+    
+       
+      

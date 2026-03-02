@@ -1,0 +1,44 @@
+version : 3.8
+services:
+  mongobd:
+    container_name: mongo
+    image: mango:alpine
+    volumnes: 
+     - ./backend/data:/data
+    ports:
+     - "27017:27017"
+
+  frontend:
+    container_name: backend
+    build: ./backed
+    env_file:
+      - /backed/.env.docker
+    ports:
+      - 31000:8000
+    depends_on:
+      - mongodb
+
+  backend:
+    container_name: frontend
+    build:
+        ./frontend/
+    env_file:
+      - /frontend/.env.docker
+    ports:
+      -5173:5173
+    depends_on:
+      - mangodb
+
+  redis:
+    container_name: redis
+    image: redis:7.0.5-alpine 
+    expose:
+      - 6379
+    depends_on:
+      - mongodb
+    restart: unless-stoped
+    
+       
+    
+
+    
