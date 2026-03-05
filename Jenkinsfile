@@ -60,31 +60,46 @@ pipeline
             }
         }
 
-        stage('OWASP: dependency check'){
-            steps{
+        stage('OWASP: dependency check') {
+
+            steps {
+
                 script {
                     // Check if dependency-check is installed
                     def dcInstalled = sh(script: 'which dependency-check || echo "not found"', returnStdout: true).trim()
+
                     if (dcInstalled == 'not found') {
-                        echo "OWASP Dependency-Check is not installed. Skipping vulnerability scan."
-                        return
-                    }
-                }
-                withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]){
-                    sh '''
-              set -e
-              echo "Starting OWASP dependency check..."
-              dependency-check --version
-              echo "API key is configured (length check not needed for security)"
-              mkdir -p odc-data odc-reports
-              echo "Running dependency-check scan..."
-              dependency-check --project "wanderlust" --scan . --format JSON --out odc-reports --data odc-data --nvdApiKey "$NVD_API_KEY"
-              echo "Dependency check completed successfully"
-            '''
-                }
+                    echo "OWASP Dependency-Check is not installed. Skipping vulnerability scan."
+                    return
             }
         }
 
+                withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]) {
+                sh '''
+                  set -e
+
+                  echo "Starting OWASP Dependency Check..."
+
+                  dependency-check --version
+
+                  mkdir -p odc-data odc-reports
+
+                  echo "Running Dependency Check scan..."
+
+                  dependency-check \
+                   --project "wanderlust" \
+                   --scan . \
+                   --format JSON \
+                   --out odc-reports \
+                  --data odc-data \
+                   --nvdApiKey "$NVD_API_KEY" \
+                   --cveValidForHours 24
+
+                echo "Dependency Check completed successfully"
+            '''
+        }
+    }
+}
         stage("SonarQube : code analysis"){
             steps{
                 withSonarQubeEnv("${env.SONARCUBE_SERVER}"){
