@@ -53,8 +53,8 @@ pipeline
             steps{
                 sh '''
                 set -e 
-                trivy --version
-                trivy fs --quiet --format json --output trivy-fs.json .
+                trivy -v
+                trivy fs --quiet --format junit --output trivy-fs.xml
                 '''
 
             }
@@ -65,15 +65,17 @@ pipeline
                 withCredentials([usernamePassword(credentialsId: 'NVD_API_KEY',
                         usernameVariable: 'NVD_USER',
                         passwordVariable: 'NVD_API_KEY')]){
-                sh '''
-                set -e 
-                dependency-check --version 
-
-                
-                mkdir -p odc-data odc-reports
-                dependency-check --project "wanderlust" --scan . --format JSON --out odc-reports --data odc-data --nvdApiKey $NVD_API_KEY
-                '''
-                }    
+                    sh '''
+                    set -e
+                    echo "Starting OWASP dependency check..."
+                    dependency-check --version
+                    echo "NVD_API_KEY is: $NVD_API_KEY"
+                    mkdir -p odc-data odc-reports
+                    echo "Running dependency-check scan..."
+                    dependency-check --project "wanderlust" --scan . --format JSON --out odc-reports --data odc-data --nvdApiKey $NVD_API_KEY
+                    echo "Dependency check completed"
+                    '''
+                }
             }
         }
 
@@ -166,12 +168,12 @@ pipeline
 
     post {
         success{
-            archiveArtifacts artifacts : '*.xml', followSymlinks : false
+            archiveArtifacts artifacts : '*.xml', followSymlink : false
 
         }
     }
 
-
+}
 
 
 
