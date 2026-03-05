@@ -66,7 +66,9 @@ pipeline
                 set -e 
                 dependency-check --version 
 
-                dependency-check --project "wanderlust" --scan . --format JSON --out .
+                rm -rf odc-data
+                mkdir -p odc-data odc-reports
+                dependency-check --project "wanderlust" --scan . --format JSON --out odc-reports --data odc-data
                 '''
             }
         }
