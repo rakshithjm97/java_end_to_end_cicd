@@ -64,7 +64,7 @@ pipeline
             steps{
                 withCredentials([usernamePassword(credentialsId: 'NVD_API_KEY',
                         usernameVariable: 'NVD_USER',
-                        passwordVariable: 'NVD_API_KEY')]{
+                        passwordVariable: 'NVD_API_KEY')]){
                 sh '''
                 set -e 
                 dependency-check --version 
