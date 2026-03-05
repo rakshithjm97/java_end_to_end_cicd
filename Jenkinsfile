@@ -61,56 +61,18 @@ pipeline
         }
 
         stage('OWASP: dependency check') {
-
             steps {
-
                 script {
-                    // Check if dependency-check is installed
-                    def dcInstalled = sh(script: 'which dependency-check || echo "not found"', returnStdout: true).trim()
-
-                    if (dcInstalled == 'not found') {
-                    echo "OWASP Dependency-Check is not installed. Skipping vulnerability scan."
-                    return
-                  }
-                }
-
-                withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]) {
-                sh '''
-                  START_TIME=$(date +%s)
-                  echo "========================================"
-                  echo "Starting OWASP Dependency Check..."
-                  echo "Start Time: $(date '+%Y-%m-%d %H:%M:%S')"
-                  echo "========================================"
-
-                  dependency-check --version
-
-                  mkdir -p odc-data odc-reports
-
-                  echo ""
-                  echo "Running Dependency Check scan using NVD Online API..."
-                  echo "Using API key for direct online vulnerability checks..."
-                  echo ""
-
-                  dependency-check \
-                   --project "wanderlust" \
-                   --scan . \
-                   --format JSON \
-                   --out odc-reports \
-                   --nvdApiKey "$NVD_API_KEY" \
-                   --noupdate || echo "WARNING: Dependency-Check scan failed, but pipeline continues. Use Trivy results instead."
-
-                  END_TIME=$(date +%s)
-                  DURATION=$((END_TIME - START_TIME))
-                  MINUTES=$((DURATION / 60))
-                  SECONDS=$((DURATION % 60))
-
-                  echo ""
-                  echo "========================================"
-                  echo "Dependency Check completed"
-                  echo "End Time: $(date '+%Y-%m-%d %H:%M:%S')"
-                  echo "Total Duration: ${MINUTES}m ${SECONDS}s"
-                  echo "========================================"
-                '''
+                    echo "========================================"
+                    echo "OWASP Dependency-Check Stage (Skipped)"
+                    echo "========================================"
+                    echo ""
+                    echo "Note: Dependency-Check v11.0.0 has compatibility issues with current NVD API"
+                    echo "Vulnerability scanning is covered by Trivy in the previous stage"
+                    echo ""
+                    echo "To enable OWASP Dependency-Check, upgrade to v11.2.0+ which fixes NVD API issues"
+                    echo ""
+                    echo "========================================"
                 }
             }
         }
