@@ -64,12 +64,12 @@ pipeline
             steps{
                 sh '''
                 set -e 
-                dependency-check --version || true
+                dependency-check --version 
 
                 dependency-check \
-                --project "wanderlust\"
-                --scan .\
-                --format Json\
+                --project "wanderlust \"
+                --scan . \
+                --format JSON \
                 --out .
                 '''
             }
