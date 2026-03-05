@@ -53,7 +53,7 @@ pipeline
             steps{
                 sh '''
                 set -e 
-                trivy -v
+                trivy --version
                 trivy fs --quiet --format junit --output trivy-fs.xml
                 '''
 
