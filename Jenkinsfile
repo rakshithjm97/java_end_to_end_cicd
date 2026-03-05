@@ -71,8 +71,8 @@ pipeline
                     if (dcInstalled == 'not found') {
                     echo "OWASP Dependency-Check is not installed. Skipping vulnerability scan."
                     return
-            }
-        }
+                  }
+                }
 
                 withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]) {
                 sh '''
@@ -92,14 +92,13 @@ pipeline
                    --format JSON \
                    --out odc-reports \
                   --data odc-data \
-                   --nvdApiKey "$NVD_API_KEY" \
-                   --cveValidForHours 24
+                   --nvdApiKey "$NVD_API_KEY"
 
-                echo "Dependency Check completed successfully"
-            '''
+                  echo "Dependency Check completed successfully"
+                 '''
+                }
+            }
         }
-    }
-}
         stage("SonarQube : code analysis"){
             steps{
                 withSonarQubeEnv("${env.SONARCUBE_SERVER}"){
