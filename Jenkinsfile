@@ -62,6 +62,7 @@ pipeline
 
         stage('OWASP: dependency check'){
             steps{
+                withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]){
                 sh '''
                 set -e 
                 dependency-check --version 
@@ -70,6 +71,7 @@ pipeline
                 mkdir -p odc-data odc-reports
                 dependency-check --project "wanderlust" --scan . --format JSON --out odc-reports --data odc-data
                 '''
+                }    
             }
         }
 
