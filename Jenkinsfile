@@ -76,13 +76,20 @@ pipeline
 
                 withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]) {
                 sh '''
+                  START_TIME=$(date +%s)
+                  echo "========================================"
                   echo "Starting OWASP Dependency Check..."
+                  echo "Start Time: $(date '+%Y-%m-%d %H:%M:%S')"
+                  echo "========================================"
 
                   dependency-check --version
 
                   mkdir -p odc-data odc-reports
 
-                  echo "Running Dependency Check scan..."
+                  echo ""
+                  echo "Running Dependency Check scan on project..."
+                  echo "This may take 10-30+ minutes depending on NVD database size..."
+                  echo ""
 
                   dependency-check \
                    --project "wanderlust" \
@@ -92,7 +99,17 @@ pipeline
                    --data odc-data \
                    --nvdApiKey "$NVD_API_KEY" || echo "WARNING: Dependency-Check scan failed, but pipeline continues. Use Trivy results instead."
 
+                  END_TIME=$(date +%s)
+                  DURATION=$((END_TIME - START_TIME))
+                  MINUTES=$((DURATION / 60))
+                  SECONDS=$((DURATION % 60))
+
+                  echo ""
+                  echo "========================================"
                   echo "Dependency Check completed"
+                  echo "End Time: $(date '+%Y-%m-%d %H:%M:%S')"
+                  echo "Total Duration: ${MINUTES}m ${SECONDS}s"
+                  echo "========================================"
                 '''
                 }
             }
