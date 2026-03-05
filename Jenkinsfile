@@ -66,11 +66,7 @@ pipeline
                 set -e 
                 dependency-check --version 
 
-                dependency-check \
-                --project "wanderlust \"
-                --scan . \
-                --format JSON \
-                --out .
+                dependency-check --project "wanderlust" --scan . --format JSON --out .
                 '''
             }
         }
