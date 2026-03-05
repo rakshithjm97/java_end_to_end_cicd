@@ -87,8 +87,8 @@ pipeline
                   mkdir -p odc-data odc-reports
 
                   echo ""
-                  echo "Running Dependency Check scan on project..."
-                  echo "This may take 10-30+ minutes depending on NVD database size..."
+                  echo "Running Dependency Check scan using NVD Online API..."
+                  echo "Using API key for direct online vulnerability checks..."
                   echo ""
 
                   dependency-check \
@@ -96,8 +96,8 @@ pipeline
                    --scan . \
                    --format JSON \
                    --out odc-reports \
-                   --data odc-data \
-                   --nvdApiKey "$NVD_API_KEY" || echo "WARNING: Dependency-Check scan failed, but pipeline continues. Use Trivy results instead."
+                   --nvdApiKey "$NVD_API_KEY" \
+                   --noupdate || echo "WARNING: Dependency-Check scan failed, but pipeline continues. Use Trivy results instead."
 
                   END_TIME=$(date +%s)
                   DURATION=$((END_TIME - START_TIME))
