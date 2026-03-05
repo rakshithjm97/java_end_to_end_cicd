@@ -62,19 +62,27 @@ pipeline
 
         stage('OWASP: dependency check'){
             steps{
+                script {
+                    // Check if dependency-check is installed
+                    def dcInstalled = sh(script: 'which dependency-check || echo "not found"', returnStdout: true).trim()
+                    if (dcInstalled == 'not found') {
+                        echo "OWASP Dependency-Check is not installed. Skipping vulnerability scan."
+                        return
+                    }
+                }
                 withCredentials([usernamePassword(credentialsId: 'NVD_API_KEY',
                         usernameVariable: 'NVD_USER',
                         passwordVariable: 'NVD_API_KEY')]){
-                    sh '''
-                    set -e
-                    echo "Starting OWASP dependency check..."
-                    dependency-check --version
-                    echo "NVD_API_KEY is: $NVD_API_KEY"
-                    mkdir -p odc-data odc-reports
-                    echo "Running dependency-check scan..."
-                    dependency-check --project "wanderlust" --scan . --format JSON --out odc-reports --data odc-data --nvdApiKey $NVD_API_KEY
-                    echo "Dependency check completed"
-                    '''
+                            sh '''
+                              set -e
+                              echo "Starting OWASP dependency check..."
+                              dependency-check --version
+                              echo "NVD_API_KEY length: ${#NVD_API_KEY}"
+                              mkdir -p odc-data odc-reports
+                              echo "Running dependency-check scan..."
+                              dependency-check --project "wanderlust" --scan . --format JSON --out odc-reports --data odc-data --nvdApiKey "$NVD_API_KEY"
+                              echo "Dependency check completed successfully"
+                            '''
                 }
             }
         }
