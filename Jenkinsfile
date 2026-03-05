@@ -54,7 +54,7 @@ pipeline
                 sh '''
                 set -e 
                 trivy -v
-                trivy fs --quiet --format JSON --output trivy-fs.JSON
+                trivy fs --quiet --format json --output trivy-fs.json . 
                 '''
 
             }
