@@ -168,7 +168,7 @@ pipeline
 
     post {
         success{
-            archiveArtifacts artifacts : '*.xml', followSymlink : false
+            archiveArtifacts artifacts : '*.xml', followSymlinks : false
 
         }
     }
@@ -177,4 +177,3 @@ pipeline
 
 
 
-}
