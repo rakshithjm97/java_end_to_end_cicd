@@ -92,7 +92,8 @@ pipeline
                    --format JSON \
                    --out odc-reports \
                   --data odc-data \
-                   --nvdApiKey "$NVD_API_KEY"
+                   --nvdApiKey "$NVD_API_KEY" \
+                   --noupdate
 
                   echo "Dependency Check completed successfully"
                  '''
