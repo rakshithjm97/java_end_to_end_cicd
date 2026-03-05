@@ -69,7 +69,7 @@ pipeline
                 dependency-check \
                 --project "wanderlust\"
                 --scan .
-                --format XML\
+                --format Json\
                 --out .
                 '''
             }
