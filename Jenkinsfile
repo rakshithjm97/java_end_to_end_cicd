@@ -163,7 +163,7 @@ pipeline
         stage("push to docker hub"){
             steps{
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'DOCKERHUB_PWD', usernameVariable: 'DOCKERHUB_USER')])
-                script{
+                {script{
                     sh '''
                     set -e
                     
@@ -176,6 +176,7 @@ pipeline
 
                     '''
                 }
+               }  
             }
         }
         
