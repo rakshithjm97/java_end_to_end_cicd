@@ -5,7 +5,7 @@ pipeline
     environment{
         SONAR_HOME = tool "Sonar"
         SONARCUBE_SERVER = "Sonar"
-        SONAR_AUTH_TOKEN = credentials('SONAR')
+        SONAR_AUTH_TOKEN = credentials('Sonar')
         DOCKERHUB_USER = "rakshithjm7"
     }
 
@@ -81,7 +81,7 @@ pipeline
             steps{
                 script {
                     try {
-                        withSonarQubeEnv("${env.SONARCUBE_SERVER}"){
+                        withSonarQubeEnv("Sonar"){
                             sh '''
                             set -e
                             echo "Starting SonarQube code analysis..."
