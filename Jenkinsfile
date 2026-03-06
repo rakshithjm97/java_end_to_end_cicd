@@ -169,7 +169,7 @@ pipeline
                 passwordVariable: 'DOCKERHUB_PWD'
             )])
                 {script{
-                   sh '''
+                   sh """
                         set -e
 
                         echo "$DOCKERHUB_PWD" | docker login -u "$DOCKERHUB_USER" --password-stdin
@@ -178,7 +178,7 @@ pipeline
                         docker push rakshithjm7/frontend:${params.DOCKER_FRONTEND_TAG}
 
                        docker logout
-                   '''
+                   """
 
                 
                 }
