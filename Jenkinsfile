@@ -151,9 +151,9 @@ pipeline
                     set -e
                     docker --version
                     cd backend
-                    docker build -t backend:${params.DOCKER_BACKEND_TAG} .
+                    docker build -t rakshithjm7/backend:${params.DOCKER_BACKEND_TAG} ./backend
                     cd ../frontend
-                    docker build -t frontend:${params.DOCKER_FRONTEND_TAG} .
+                    docker build -t rakshithjm7/frontend:${params.DOCKER_FRONTEND_TAG} ./frontend
 
                     """
                 }
@@ -174,8 +174,8 @@ pipeline
 
                         echo "$DOCKERHUB_PWD" | docker login -u "$DOCKERHUB_USER" --password-stdin
 
-                        docker push rakshithjm7/backend:${BACKEND_DOCKER_TAG}
-                        docker push rakshithjm7/frontend:${FRONTEND_DOCKER_TAG}
+                        docker push rakshithjm7/backend:${params.DOCKER_BACKEND_TAG}
+                        docker push rakshithjm7/frontend:${params.DOCKER_FRONTEND_TAG}
 
                        docker logout
                    '''
