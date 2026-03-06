@@ -172,7 +172,7 @@ pipeline
                     sh '''
                     set -e
                     
-                    echo "$DH_PASS" | docker login -u "$DH_USER" --password --stdin
+                    echo "\$DOCKERHUB_PWD" | docker login -u "\$DOCKERHUB_USER" --password-stdin
 
                     docker push rakshithjm7/backend:${params.DOCKER_BACKEND_TAG}
                     docker push rakshithjm7/frontend:${params.DOCKER_FRONTEND_TAG}
