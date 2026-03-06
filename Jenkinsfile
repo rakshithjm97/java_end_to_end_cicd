@@ -92,7 +92,7 @@ pipeline
                             -Dsonar.projectVersion=1.0 \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=${SONAR_HOST_URL} \
-                            -Dsonar.login=${SONAR_AUTH_TOKEN}
+                            
                             echo "SonarQube analysis completed successfully"
                             '''
                         }
