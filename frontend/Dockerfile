@@ -23,7 +23,7 @@ WORKDIR /app
 #copying from previso build 
 FROM node:21-slim
 
-COPY --from=fronted-builder /app .
+COPY --from=frontend-builder /app .
 
 # Copy the .env.sample file to .env.local
 COPY .env.docker .env.local
