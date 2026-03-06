@@ -5,7 +5,7 @@ pipeline
     environment{
         SONAR_HOME = tool "Sonar"
         SONARCUBE_SERVER = "Sonar"
-        
+        DH_USER  = "rakshithjm7"
         DOCKERHUB_USER = "rakshithjm7"
     }
 
