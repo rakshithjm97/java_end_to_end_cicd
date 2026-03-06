@@ -5,7 +5,7 @@ pipeline
     environment{
         SONAR_HOME = tool "Sonar"
         SONARCUBE_SERVER = "Sonar"
-        SONAR_AUTH_TOKEN = credentials('Sonar')
+        
         DOCKERHUB_USER = "rakshithjm7"
     }
 
