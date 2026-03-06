@@ -1,40 +1,42 @@
-#from image
-from node:21 AS frontend-builder
 
-#workiung dir
+
+# Multi-stage production Dockerfile for a Vite + React frontend
+
+# -------------------------
+# Stage 1: Build the app
+# -------------------------
+FROM node:20-alpine AS builder
+
 WORKDIR /app
 
-# Copy the package.json and package-lock.json for dependency installation
-COPY package*.json  ./
+# Copy dependency files first for better layer caching
+COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies reproducibly
+RUN npm ci
 
-# Copy the rest of the application code
+# Copy application source
 COPY . .
 
-#stage 2
+# Build production assets
+RUN npm run build
 
-FROM node:21-slim 
+# -------------------------
+# Stage 2: Serve with Nginx
+# -------------------------
+FROM nginx:1.27-alpine
 
-#set up working dir
-WORKDIR /app
+# Remove default nginx static files
+RUN rm -rf /usr/share/nginx/html/*
 
-#copying from previso build 
-FROM node:21-slim
+# Copy built frontend assets
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-COPY --from=frontend-builder /app .
+# SPA routing support
+RUN printf 'server {\n  listen 80;\n  server_name _;\n\n  root /usr/share/nginx/html;\n  index index.html;\n\n  location / {\n    try_files $uri $uri/ /index.html;\n  }\n\n  location /assets/ {\n    expires 1y;\n    add_header Cache-Control "public, immutable";\n  }\n}\n' > /etc/nginx/conf.d/default.conf
 
-# Copy the .env.sample file to .env.local
-COPY .env.docker .env.local
+EXPOSE 80
 
-# Expose port 5173 for the Node.js application
-EXPOSE 5173
-
-
-#define the defauly commnad to run application 
-CMD ['npm', 'run', 'dev','--','host']
-
-
+CMD ["nginx", "-g", "daemon off;"]
 
 
