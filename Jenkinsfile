@@ -151,9 +151,9 @@ pipeline
                     set -e
                     docker --version
                     cd backend
-                    docker build -t rakshithjm7/backend:${params.DOCKER_BACKEND_TAG} ./backend
+                    docker build -t rakshithjm7/backend:${params.DOCKER_BACKEND_TAG} .
                     cd ../frontend
-                    docker build -t rakshithjm7/frontend:${params.DOCKER_FRONTEND_TAG} ./frontend
+                    docker build -t rakshithjm7/frontend:${params.DOCKER_FRONTEND_TAG} .
 
                     """
                 }
