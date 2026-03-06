@@ -88,7 +88,7 @@ pipeline
                             $SONAR_HOME/bin/sonar-scanner \
                             -Dsonar.projectKey=wanderlust \
                             -Dsonar.projectName=wanderlust \
-                            -Dsonar.organization=Rjm7 \
+                            -Dsonar.organization=rakshithjm97 \
                             -Dsonar.projectVersion=1.0 \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=${SONAR_HOST_URL} \
