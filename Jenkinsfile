@@ -5,7 +5,7 @@ pipeline
     environment{
         SONAR_HOME = tool "Sonar"
         SONARCUBE_SERVER = "Sonar"
-        DH_USER  = "rakshithjm7"
+        
         DOCKERHUB_USER = "rakshithjm7"
     }
 
@@ -162,9 +162,11 @@ pipeline
 
         stage("push to docker hub"){
             steps{
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'DOCKERHUB_PWD', usernameVariable: 'DOCKERHUB_USER')])
                 script{
                     sh '''
                     set -e
+                    
                     echo "$DH_PASS" | docker login -u "$DH_USER" --password --stdin
 
                     docker push rakshithjm7/backend:${params.DOCKER_BACKEND_TAG}
