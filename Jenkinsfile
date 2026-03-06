@@ -146,7 +146,7 @@ pipeline
         stage("build docker image"){
             steps{
                 script{
-                    sh '''
+                    sh """
                     set -e
                     docker --version
                     cd backend
@@ -154,7 +154,7 @@ pipeline
                     cd ../frontend
                     docker build -t frontend:${params.DOCKER_FRONTEND_TAG} .
 
-                    '''
+                    """
                 }
             }
         }
