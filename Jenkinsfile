@@ -6,6 +6,7 @@ pipeline
         SONAR_HOME = tool "Sonar"
         SONARCUBE_SERVER = "Sonar"
         
+        
         DOCKERHUB_USER = "rakshithjm7"
     }
 
@@ -162,7 +163,11 @@ pipeline
 
         stage("push to docker hub"){
             steps{
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', passwordVariable: 'DOCKERHUB_PWD', usernameVariable: 'DOCKERHUB_USER')])
+                 withCredentials([usernamePassword(
+                credentialsId: 'dockerhub-creds',
+                usernameVariable: 'DOCKERHUB_USER',
+                passwordVariable: 'DOCKERHUB_PWD'
+            )])
                 {script{
                     sh '''
                     set -e
