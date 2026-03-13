@@ -1,0 +1,22 @@
+verison: apps/v1
+kind: Deployment
+metadata: 
+    name: backend-deployment
+    namedspace: wonderlust
+    labels:
+        app: backend
+
+spcec:
+  replicas: 1
+  selectors:
+    matchlabel:
+     app: backend
+  template:
+    meatadata:
+     name: backed
+     app:
+       backend
+    
+
+
+
